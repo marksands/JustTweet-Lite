@@ -7,6 +7,7 @@
 //
 
 #import "TweetViewController.h"
+#import "XAuthTwitterEngine.h"
 
 @implementation TweetViewController
 
