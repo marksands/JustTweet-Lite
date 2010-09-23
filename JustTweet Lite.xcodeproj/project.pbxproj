@@ -22,7 +22,6 @@
 		4D16DAE31247E29C0025D94E /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D16DAB41247E29C0025D94E /* NSString+UUID.m */; };
 		4D16DAE41247E29C0025D94E /* libOAuth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D16DAB61247E29C0025D94E /* libOAuth.a */; };
 		4D16DAE51247E29C0025D94E /* XAuthTwitterEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D16DAC71247E29C0025D94E /* XAuthTwitterEngine.m */; };
-		4D16DAE71247E29C0025D94E /* XAuthTwitterEngineDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D16DACC1247E29C0025D94E /* XAuthTwitterEngineDemoViewController.m */; };
 		9F31004F0FB4A1E700F33970 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F31004E0FB4A1E700F33970 /* SettingsViewController.m */; };
 		9F9002A60FB31007002E8F74 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9002A50FB31007002E8F74 /* SystemConfiguration.framework */; };
 		9FAEFB340FB9D5D5001A73BC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9FAEFB330FB9D5D5001A73BC /* Settings.bundle */; };
@@ -76,8 +75,6 @@
 		4D16DAC61247E29C0025D94E /* XAuthTwitterEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAuthTwitterEngine.h; sourceTree = "<group>"; };
 		4D16DAC71247E29C0025D94E /* XAuthTwitterEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XAuthTwitterEngine.m; sourceTree = "<group>"; };
 		4D16DAC81247E29C0025D94E /* XAuthTwitterEngineDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAuthTwitterEngineDelegate.h; sourceTree = "<group>"; };
-		4D16DACB1247E29C0025D94E /* XAuthTwitterEngineDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAuthTwitterEngineDemoViewController.h; sourceTree = "<group>"; };
-		4D16DACC1247E29C0025D94E /* XAuthTwitterEngineDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XAuthTwitterEngineDemoViewController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9F31004D0FB4A1E700F33970 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		9F31004E0FB4A1E700F33970 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
@@ -173,8 +170,6 @@
 			isa = PBXGroup;
 			children = (
 				4D16DA831247E29C0025D94E /* Libraries & Headers */,
-				4D16DACB1247E29C0025D94E /* XAuthTwitterEngineDemoViewController.h */,
-				4D16DACC1247E29C0025D94E /* XAuthTwitterEngineDemoViewController.m */,
 			);
 			path = XAuth;
 			sourceTree = "<group>";
@@ -297,7 +292,6 @@
 				4D16DAE21247E29C0025D94E /* NSData+MGTwitterBase64.m in Sources */,
 				4D16DAE31247E29C0025D94E /* NSString+UUID.m in Sources */,
 				4D16DAE51247E29C0025D94E /* XAuthTwitterEngine.m in Sources */,
-				4D16DAE71247E29C0025D94E /* XAuthTwitterEngineDemoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

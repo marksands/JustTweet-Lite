@@ -14,6 +14,7 @@
 @synthesize countDown;
 @synthesize tweetText;
 @synthesize activityView;
+@synthesize twitterEngine;
 
 - (void)storeTweet {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -66,65 +67,6 @@
 	return escaped;
 }
 
-- (BOOL)sendTweet {
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	NSString *urlString = [NSString 
-						   stringWithFormat:@"http://%@:%@@twitter.com/statuses/update.json", 
-						   [self urlEncode:[defaults stringForKey:kTwitterUsername]],
-						   [self urlEncode:[defaults stringForKey:kTwitterPassword]]];
-//	NSLog(urlString);
-	NSURL *url = [NSURL URLWithString:urlString];
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-	[request setHTTPMethod:@"POST"];
-	[request setValue:@"JustTweet iPhone Client" forHTTPHeaderField:@"X-Twitter-Client"];
-	[request setValue:@"0.0.2" forHTTPHeaderField:@"X-Twitter-Client-Version"];
-	[request setValue:@"http://anachromystic.com" forHTTPHeaderField:@"X-Twitter-Client-URL"];
-	// TODO: Add Twitter client source ID to parameters once one is acquired.
-	[request setHTTPBody:[[NSString stringWithFormat:@"status=%@", [tweetText text]] 
-						  dataUsingEncoding: NSUTF8StringEncoding]];
-	NSHTTPURLResponse *httpResponse;
-	NSError *error;
-	[NSURLConnection sendSynchronousRequest:request 
-						  returningResponse:&httpResponse
-									  error:&error];
-	if(NULL==error){		
-		int statusCode = [httpResponse statusCode];
-		if(200 == statusCode){
-			return TRUE;
-		} else {
-			UIAlertView *alert = [[UIAlertView alloc]
-								  initWithTitle:@"Unable to Tweet" 
-								  message:[NSString stringWithFormat:@"Twitter returned the following message:\n\"%@\"%@", 
-										   [NSHTTPURLResponse localizedStringForStatusCode:statusCode], 
-										   @"\nPlease try again later.\nYou can change your user name and password from the Settings application if necessary."]
-								  delegate:self
-								  cancelButtonTitle:@"OK"
-								  otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-		}
-	} else {
-		NSString *msg;
-		if(-1012==error.code){
-			msg = @"Invalid username or password.  Please review and correct your credentials from the Settings application and try again.\nThank you.";
-		}else{
-			msg = [NSString stringWithFormat:@"Received error:\n\"%@\"%@", 
-				   [error localizedDescription],
-				   @"\nPlease verify your connection to the Internet."];
-		}
-		UIAlertView *alert = [[UIAlertView alloc]
-							  initWithTitle:@"Unable to Tweet" 
-							  message:msg
-							  delegate:self
-							  cancelButtonTitle:@"OK"
-							  otherButtonTitles:nil];
-		[alert show];
-//		[alert release];
-//		[msg release]; // necessary?
-	}
-	return FALSE;
-}
-
 - (void)startSpinner {
 	[activityView startAnimating];
 	[tweetText setEditable:NO];
@@ -135,17 +77,28 @@
 	[activityView stopAnimating];
 }
 
-- (void)myTimerFireMethod:(NSTimer*)theTimer {
+- (void)myTimerFireMethod:(NSTimer*)theTimer
+{
 	[self storeTweet];
-	if([self sendTweet]){
-		[self clearStoredTweet];
-		[self clearScreen];
-	}
-	[self stopSpinner];
+
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+	NSString *username = [self urlEncode:[defaults stringForKey:kTwitterUsername]];
+	NSString *password = [self urlEncode:[defaults stringForKey:kTwitterPassword]];
+
+  NSLog(@"About to request an xAuth token exchange for username: ]%@[ password: ]%@[.", username, password);
+	[self.twitterEngine exchangeAccessTokenForUsername:username password:password];
+
+	NSLog(@"About to send test tweet: \"%@\"", self.tweetText.text);
+	[self.twitterEngine sendUpdate:tweetText.text];
+  
+  [self clearScreen];
+  [self stopSpinner];
 }
 
 - (IBAction)tweetButtonPressed:(id)sender {
 	[self startSpinner];
+
 	[NSTimer scheduledTimerWithTimeInterval:0.1 
 					 				 target:self 
 								   selector:@selector(myTimerFireMethod:)
@@ -155,6 +108,122 @@
 	 [self myTimerFireMethod:nil];
 	 */
 }
+
+#pragma mark -
+#pragma mark XAuthTwitterEngineDelegate methods
+
+- (void) storeCachedTwitterXAuthAccessTokenString: (NSString *)tokenString forUsername:(NSString *)username
+{
+	//
+	// Note: do not use NSUserDefaults to store this in a production environment. 
+	// ===== Use the keychain instead. Check out SFHFKeychainUtils if you want 
+	//       an easy to use library. http://github.com/ldandersen/scifihifi-iphone
+	//
+	NSLog(@"Access token string returned: %@", tokenString);
+	
+	[[NSUserDefaults standardUserDefaults] setObject:tokenString forKey:kCachedXAuthAccessTokenStringKey];
+	
+	// Enable the send tweet button.
+	// self.sendTweetButton.enabled = YES;
+}
+
+- (NSString *) cachedTwitterXAuthAccessTokenStringForUsername: (NSString *)username;
+{
+	NSString *accessTokenString = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedXAuthAccessTokenStringKey];
+	
+	NSLog(@"About to return access token string: %@", accessTokenString);
+	
+	return accessTokenString;
+}
+
+
+- (void) twitterXAuthConnectionDidFailWithError: (NSError *)error;
+{
+	NSLog(@"Error: %@", error);
+	
+	//UIAlertViewQuick(@"Authentication error", @"Please check your username and password and try again.", @"OK");
+}
+
+
+#pragma mark -
+#pragma mark MGTwitterEngineDelegate methods
+
+- (void)requestSucceeded:(NSString *)connectionIdentifier
+{
+	NSLog(@"Twitter request succeeded: %@", connectionIdentifier);
+	
+	//UIAlertViewQuick(@"Tweet sent!", @"The tweet was successfully sent. Everything works!", @"OK");
+}
+
+- (void)requestFailed:(NSString *)connectionIdentifier withError:(NSError *)error
+{
+	NSLog(@"Twitter request failed: %@ with error:%@", connectionIdentifier, error);
+  
+	if ([[error domain] isEqualToString: @"HTTP"])
+	{
+		switch ([error code]) {
+				
+			case 401:
+			{
+				// Unauthorized. The user's credentials failed to verify.
+				//UIAlertViewQuick(@"Oops!", @"Your username and password could not be verified. Double check that you entered them correctly and try again.", @"OK");	
+				break;				
+			}
+				
+			case 502:
+			{
+				// Bad gateway: twitter is down or being upgraded.
+				//UIAlertViewQuick(@"Fail whale!", @"Looks like Twitter is down or being updated. Please wait a few seconds and try again.", @"OK");	
+				break;				
+			}
+				
+			case 503:
+			{
+				// Service unavailable
+				//UIAlertViewQuick(@"Hold your taps!", @"Looks like Twitter is overloaded. Please wait a few seconds and try again.", @"OK");	
+				break;								
+			}
+				
+			default:
+			{
+				NSString *errorMessage = [[NSString alloc] initWithFormat: @"%d %@", [error	code], [error localizedDescription]];
+        NSLog(@"Error message: %@",errorMessage);
+				//UIAlertViewQuick(@"Twitter error!", errorMessage, @"OK");	
+				[errorMessage release];
+				break;				
+			}
+		}
+		
+	}
+	else 
+	{
+		switch ([error code]) {
+				
+			case -1009:
+			{
+				//UIAlertViewQuick(@"You're offline!", @"Sorry, it looks like you lost your Internet connection. Please reconnect and try again.", @"OK");					
+				break;				
+			}
+				
+			case -1200:
+			{
+				//UIAlertViewQuick(@"Secure connection failed", @"I couldn't connect to Twitter. This is most likely a temporary issue, please try again.", @"OK");					
+				break;								
+			}
+				
+			default:
+			{				
+				NSString *errorMessage = [[NSString alloc] initWithFormat:@"%@ xx %d: %@", [error domain], [error code], [error localizedDescription]];
+				//UIAlertViewQuick(@"Network Error!", errorMessage , @"OK");
+				[errorMessage release];
+			}
+		}
+	}
+	
+}
+
+#pragma mark -
+
 
 /*
  // The designated initializer. Override to perform setup that is required before the view is loaded.
@@ -174,8 +243,23 @@
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-    [super viewDidLoad];
-	
+  [super viewDidLoad];
+
+	// Sanity check
+	if ([kOAuthConsumerKey isEqualToString:@""] || [kOAuthConsumerSecret isEqualToString:@""]) {
+		NSLog(@"Please add your Consumer Key and Consumer Secret from http://twitter.com/oauth_clients/details/<your app id> to the XAuthTwitterEngineDemoViewController.h before running the app. Thank you!");
+	}
+
+	// Initialize the XAuthTwitterEngine.
+	self.twitterEngine = [[XAuthTwitterEngine alloc] initXAuthWithDelegate:self];
+	self.twitterEngine.consumerKey = kOAuthConsumerKey;
+	self.twitterEngine.consumerSecret = kOAuthConsumerSecret;
+  
+	if ([self.twitterEngine isAuthorized]) {
+		NSLog(@"Cached xAuth token found!", @"This app was previously authorized for a Twitter account so you can press the second button to send a tweet now.", @"OK");
+	}
+
+	// Focus
 	[tweetText becomeFirstResponder];
 	[self showLastTweet];
 }
@@ -196,7 +280,9 @@
 - (void)dealloc {
 	[countDown dealloc];
 	[tweetText dealloc];
-    [super dealloc];
+  [twitterEngine release];
+
+  [super dealloc];
 }
 
 @end

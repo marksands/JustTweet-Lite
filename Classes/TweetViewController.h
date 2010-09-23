@@ -7,29 +7,27 @@
 //
 
 #import <UIKit/UIKit.h>
-
-
-#import "JustTweetAppDelegate.h" // for settings bundle key constants
-
+ // for settings bundle key constants
+#import "JustTweetAppDelegate.h"
 #import "XAuthTwitterEngineDelegate.h"
 #import "OAToken.h"
 
-// these are my Social Vuvu keys :P
+  // Replace these with your consumer key
+#define kOAuthConsumerKey @""
 
-#define kOAuthConsumerKey		@"4orFnyGqEMaITmvX0VTOw"		// Replace these with your consumer key 
-#define	kOAuthConsumerSecret	@"7FFtBgPQ4wnggXTHQELEoGpatL3j9sCc0mzViAlI9Y"		// and consumer secret from 
-// http://twitter.com/oauth_clients/details/<your app id>
+  // and consumer secret from
+#define	kOAuthConsumerSecret @""
 
-#define kCachedXAuthAccessTokenStringKey	@"cachedXAuthAccessTokenKey"
+  // http://dev.twitter.com/apps/1235
+#define kCachedXAuthAccessTokenStringKey @"cachedXAuthAccessTokenKey"
 
 @class XAuthTwitterEngine;
-
 
 @interface TweetViewController : UIViewController <UITextViewDelegate> {
 	IBOutlet UINavigationItem *countDown;
 	IBOutlet UITextView *tweetText;
 	IBOutlet UIActivityIndicatorView *activityView;
-  
+
   XAuthTwitterEngine *twitterEngine;
 }
 
