@@ -36,7 +36,17 @@
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
-	[countDown setTitle:[NSString stringWithFormat:@"%i",(140-[[tweetText text] length])]];
+  countDown.text = [NSString stringWithFormat:@"%i",(140-[[tweetText text] length])];
+
+  if ( [[tweetText text] length] <= 140 ) {
+    countDown.textColor = [UIColor whiteColor];
+    countDown.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+  }
+  else {
+    countDown.textColor = [UIColor redColor];
+    countDown.shadowColor = [UIColor colorWithWhite:0.0 alpha:0];
+  }
+
 }
 
 - (IBAction)clearButtonPressed:(id)sender {
@@ -91,6 +101,7 @@
 
 	NSLog(@"About to send test tweet: \"%@\"", self.tweetText.text);
 	[self.twitterEngine sendUpdate:tweetText.text];
+  //[self.twitterEngine sendRetweet:3456789];
   
   [self clearScreen];
   [self stopSpinner];
@@ -120,9 +131,9 @@
 	//       an easy to use library. http://github.com/ldandersen/scifihifi-iphone
 	//
 	NSLog(@"Access token string returned: %@", tokenString);
-	
+
 	[[NSUserDefaults standardUserDefaults] setObject:tokenString forKey:kCachedXAuthAccessTokenStringKey];
-	
+
 	// Enable the send tweet button.
 	// self.sendTweetButton.enabled = YES;
 }
@@ -130,13 +141,12 @@
 - (NSString *) cachedTwitterXAuthAccessTokenStringForUsername: (NSString *)username;
 {
 	NSString *accessTokenString = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedXAuthAccessTokenStringKey];
-	
+
 	NSLog(@"About to return access token string: %@", accessTokenString);
-	
+
 	return accessTokenString;
 }
-
-
+  
 - (void) twitterXAuthConnectionDidFailWithError: (NSError *)error;
 {
 	NSLog(@"Error: %@", error);
@@ -245,7 +255,19 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-	// Sanity check
+  CGRect frame = CGRectMake(0, 0, 320, 44);
+  countDown = [[[UILabel alloc] initWithFrame:frame] autorelease];
+  countDown.backgroundColor = [UIColor clearColor];
+  countDown.font = [UIFont boldSystemFontOfSize:20.0];
+  countDown.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+  countDown.textAlignment = UITextAlignmentCenter;
+  countDown.textColor = [UIColor whiteColor];
+  [self.view addSubview:countDown];
+  //self.navigationItem.titleView = countDown;
+  countDown.text = @"140";
+
+
+  // Sanity check
 	if ([kOAuthConsumerKey isEqualToString:@""] || [kOAuthConsumerSecret isEqualToString:@""]) {
 		NSLog(@"Please add your Consumer Key and Consumer Secret from http://twitter.com/oauth_clients/details/<your app id> to the XAuthTwitterEngineDemoViewController.h before running the app. Thank you!");
 	}

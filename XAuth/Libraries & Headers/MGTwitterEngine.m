@@ -1041,6 +1041,19 @@
 }
 
 
+- (NSString *)sendRetweet:(unsigned long)updateID
+{
+  if (updateID == 0){
+    return nil;
+  }
+  NSString *path = [NSString stringWithFormat:@"statuses/retweet/%u.%@", updateID, API_FORMAT];
+  
+  return [self _sendRequestWithMethod:HTTP_POST_METHOD path:path         
+                      queryParameters:nil body:nil 
+                          requestType:MGTwitterUpdateSendRequest
+                         responseType:MGTwitterStatus];
+}
+
 #pragma mark -
 
 

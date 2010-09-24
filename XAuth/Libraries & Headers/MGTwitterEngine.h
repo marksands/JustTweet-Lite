@@ -97,6 +97,10 @@
 - (NSString *)sendUpdate:(NSString *)status; // statuses/update
 - (NSString *)sendUpdate:(NSString *)status inReplyTo:(unsigned long)updateID; // statuses/update
 
+// Added to update MGTwitterEngine for retweet support. TODO: Update entire MGTwitterEngine
+// http://github.com/freeatnet/MGTwitterEngine/commit/294035e5e7cde40c7d0239502ee208d872a6c1f6
+- (NSString *)sendRetweet:(unsigned long)updateID; // statuses/retweet
+
 - (NSString *)getRepliesStartingAtPage:(int)pageNum; // statuses/mentions
 - (NSString *)getRepliesSinceID:(unsigned long)sinceID startingAtPage:(int)pageNum count:(int)count; // statuses/mentions
 - (NSString *)getRepliesSinceID:(unsigned long)sinceID withMaximumID:(unsigned long)maxID startingAtPage:(int)pageNum count:(int)count; // statuses/mentions

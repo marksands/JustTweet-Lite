@@ -24,14 +24,14 @@
 @class XAuthTwitterEngine;
 
 @interface TweetViewController : UIViewController <UITextViewDelegate> {
-	IBOutlet UINavigationItem *countDown;
+  UILabel *countDown;
 	IBOutlet UITextView *tweetText;
 	IBOutlet UIActivityIndicatorView *activityView;
 
   XAuthTwitterEngine *twitterEngine;
 }
 
-@property (retain, nonatomic) UINavigationItem *countDown;
+@property (retain, nonatomic) UILabel *countDown;
 @property (retain, nonatomic) UITextView *tweetText;
 @property (retain, nonatomic) UIActivityIndicatorView *activityView;
 
