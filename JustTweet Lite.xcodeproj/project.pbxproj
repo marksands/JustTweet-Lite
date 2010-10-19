@@ -22,6 +22,7 @@
 		4D16DAE31247E29C0025D94E /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D16DAB41247E29C0025D94E /* NSString+UUID.m */; };
 		4D16DAE41247E29C0025D94E /* libOAuth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D16DAB61247E29C0025D94E /* libOAuth.a */; };
 		4D16DAE51247E29C0025D94E /* XAuthTwitterEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D16DAC71247E29C0025D94E /* XAuthTwitterEngine.m */; };
+		4D9041131262B771001E4D48 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D9041121262B771001E4D48 /* Security.framework */; };
 		9F31004F0FB4A1E700F33970 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F31004E0FB4A1E700F33970 /* SettingsViewController.m */; };
 		9F9002A60FB31007002E8F74 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9002A50FB31007002E8F74 /* SystemConfiguration.framework */; };
 		9FAEFB340FB9D5D5001A73BC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9FAEFB330FB9D5D5001A73BC /* Settings.bundle */; };
@@ -75,6 +76,7 @@
 		4D16DAC61247E29C0025D94E /* XAuthTwitterEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAuthTwitterEngine.h; sourceTree = "<group>"; };
 		4D16DAC71247E29C0025D94E /* XAuthTwitterEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XAuthTwitterEngine.m; sourceTree = "<group>"; };
 		4D16DAC81247E29C0025D94E /* XAuthTwitterEngineDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XAuthTwitterEngineDelegate.h; sourceTree = "<group>"; };
+		4D9041121262B771001E4D48 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = iphoneos2.2.1/System/Library/Frameworks/Security.framework; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9F31004D0FB4A1E700F33970 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		9F31004E0FB4A1E700F33970 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				9F9002A60FB31007002E8F74 /* SystemConfiguration.framework in Frameworks */,
 				4D16DAE41247E29C0025D94E /* libOAuth.a in Frameworks */,
+				4D9041131262B771001E4D48 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +161,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4D9041121262B771001E4D48 /* Security.framework */,
 				9F9002A50FB31007002E8F74 /* SystemConfiguration.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,

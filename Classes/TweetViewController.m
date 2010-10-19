@@ -95,14 +95,13 @@
 
 	NSString *username = [self urlEncode:[defaults stringForKey:kTwitterUsername]];
 	NSString *password = [self urlEncode:[defaults stringForKey:kTwitterPassword]];
+    
+  NSLog(@"About to exchange credentials username ]%@[ password ]%@[", username, password);
+  [self.twitterEngine exchangeAccessTokenForUsername:username password:password];
+    
+  NSLog(@"About to send test tweet: \"%@\"", self.tweetText.text);
+  [self.twitterEngine sendUpdate:tweetText.text];
 
-  NSLog(@"About to request an xAuth token exchange for username: ]%@[ password: ]%@[.", username, password);
-	[self.twitterEngine exchangeAccessTokenForUsername:username password:password];
-
-	NSLog(@"About to send test tweet: \"%@\"", self.tweetText.text);
-	[self.twitterEngine sendUpdate:tweetText.text];
-  //[self.twitterEngine sendRetweet:3456789];
-  
   [self clearScreen];
   [self stopSpinner];
 }
@@ -114,10 +113,7 @@
 					 				 target:self 
 								   selector:@selector(myTimerFireMethod:)
 								   userInfo:nil
-								    repeats:NO];	
-	/*
-	 [self myTimerFireMethod:nil];
-	 */
+								    repeats:NO];
 }
 
 #pragma mark -
@@ -131,9 +127,8 @@
 	//       an easy to use library. http://github.com/ldandersen/scifihifi-iphone
 	//
 	NSLog(@"Access token string returned: %@", tokenString);
-
-	[[NSUserDefaults standardUserDefaults] setObject:tokenString forKey:kCachedXAuthAccessTokenStringKey];
-
+  [[NSUserDefaults standardUserDefaults] setObject:tokenString forKey:kCachedXAuthAccessTokenStringKey];
+  
 	// Enable the send tweet button.
 	// self.sendTweetButton.enabled = YES;
 }
@@ -144,14 +139,14 @@
 
 	NSLog(@"About to return access token string: %@", accessTokenString);
 
-	return accessTokenString;
+  return accessTokenString;
 }
   
 - (void) twitterXAuthConnectionDidFailWithError: (NSError *)error;
 {
 	NSLog(@"Error: %@", error);
 	
-	//UIAlertViewQuick(@"Authentication error", @"Please check your username and password and try again.", @"OK");
+	//UIAlertViewQuick(@"Authentication error", @"Please check your username  and password and try again.", @"OK");
 }
 
 
